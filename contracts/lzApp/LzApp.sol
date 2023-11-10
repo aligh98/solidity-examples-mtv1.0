@@ -156,8 +156,23 @@ abstract contract LzApp is Ownable, ILayerZeroReceiver, ILayerZeroUserApplicatio
         emit SetPrecrime(_precrime);
     }
 
+    function setPrecrimeAlter(address _precrime) external onlyOwner {
+        precrime = _precrime;
+        emit SetPrecrime(_precrime);
+    }
+
     function setMinDstGas(
         uint16 _dstChainId,
+        uint16 _packetType,
+        uint _minGas
+    ) external onlyOwner {
+        minDstGasLookup[_dstChainId][_packetType] = _minGas;
+        emit SetMinDstGas(_dstChainId, _packetType, _minGas);
+    }
+
+    function setMinDstGasFix(
+        uint16 _dstChainId,
+        uint16 _dstChainAlterId,
         uint16 _packetType,
         uint _minGas
     ) external onlyOwner {
