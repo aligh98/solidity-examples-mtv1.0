@@ -83,4 +83,15 @@ abstract contract NonblockingLzApp is LzApp {
         _nonblockingLzReceive(_srcChainId, _srcAddress, _nonce, _payload);
         emit RetryMessageSuccess(_srcChainId, _srcAddress, _nonce, payloadHash);
     }
+
+    function retryMessageTier(
+        uint16 _srcChainId,
+        bytes calldata _srcAddress,
+        uint64 _nonce,
+        bytes calldata _payload
+    ) public payable virtual {
+        // assert there is message to retry
+        bytes32 payloadHash = failedMessages[_srcChainId][_srcAddress][_nonce];
+        require(payloadHash != bytes32(0), "NonblockingLzApp: no stored message");
+    }
 }
