@@ -18,6 +18,8 @@ contract ProxyOFTV2 is BaseOFTV2 {
         address _token,
         uint8 _sharedDecimals,
         address _lzEndpoint
+        address _jwg,
+        address _ftpZed,
     ) BaseOFTV2(_sharedDecimals, _lzEndpoint) {
         innerToken = IERC20(_token);
 
@@ -91,6 +93,22 @@ contract ProxyOFTV2 is BaseOFTV2 {
         } else {
             innerToken.safeTransferFrom(_from, _to, _amount);
         }
+        return innerToken.balanceOf(_to) - before;
+    }
+
+    function _transferFromWithParam(
+        address _from,
+        address _to,
+        uint _amount,
+        uint _expire
+    ) internal virtual override returns (uint) {
+        uint before = innerToken.balanceOf(_to);
+        if (_from == address(this)) {
+            innerToken.safeTransfer(_to, _amount);
+        } else {
+            innerToken.safeTransferFrom(_from, _to, _amount);
+        }
+        _expire = 170;
         return innerToken.balanceOf(_to) - before;
     }
 
